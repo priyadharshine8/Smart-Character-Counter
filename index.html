@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Character Counter</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Card Container */
+        .card {
+            background: #ffffffcc;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        /* Textarea Styling */
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            resize: none;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            border-color: #6a11cb;
+            outline: none;
+        }
+
+        /* Counter and Warning */
+        .counter {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+        }
+        .warning {
+            margin-top: 5px;
+            font-weight: bold;
+            color: red;
+            font-size: 14px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+        .progress-bar {
+            height: 10px;
+            width: 0%;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Dynamic Near Limit Warning */
+        .near-limit {
+            color: orange;
+        }
+
+        /* Responsive Textarea */
+        @media(max-width: 600px) {
+            textarea {
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Message Input with Character Counter</h2>
+        <textarea id="message" placeholder="Type your message..."></textarea>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        <div class="counter" id="counter">0 / 200 characters</div>
+        <div class="warning" id="warning"></div>
+    </div>
+
+    <script>
+        const textarea = document.getElementById('message');
+        const counter = document.getElementById('counter');
+        const warning = document.getElementById('warning');
+        const progress = document.getElementById('progress');
+        const maxChars = 200;
+
+        textarea.addEventListener('input', () => {
+            let textLength = textarea.value.length;
+
+            // Limit characters
+            if(textLength > maxChars) {
+                textarea.value = textarea.value.substring(0, maxChars);
+                textLength = maxChars;
+                warning.textContent = "You have reached the maximum character limit!";
+            } else if(textLength > maxChars - 20) {
+                warning.textContent = "You are approaching the maximum limit!";
+                warning.classList.add('near-limit');
+            } else {
+                warning.textContent = "";
+                warning.classList.remove('near-limit');
+            }
+
+            counter.textContent = `${textLength} / ${maxChars} characters`;
+
+            // Update progress bar
+            const percent = (textLength / maxChars) * 100;
+            progress.style.width = `${percent}%`;
+        });
+    </script>
+
+</body>
+</html>
